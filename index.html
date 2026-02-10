@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Writing: Pie Chart Masterclass</title>
+    <style>
+        :root {
+            --primary-color: #13a62e;
+            --bg-color: #e5f6e9;
+            --white: #ffffff;
+            --correct: #28a745;
+            --wrong: #dc3545;
+            --highlight-text: #d40000;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 { color: var(--primary-color); text-align: center; margin-bottom: 30px; text-transform: uppercase; }
+
+        .name-section {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .name-section input {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            flex-grow: 1;
+            font-size: 16px;
+        }
+
+        .page-content { display: none; }
+        .page-content.active { display: block; }
+
+        /* CHỈNH SỬA LAYOUT SONG SONG */
+        .section-wrapper {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 50px;
+            align-items: flex-start;
+        }
+
+        .sticky-chart-box {
+            flex: 1;
+            position: -webkit-sticky;
+            position: sticky;
+            top: 20px; /* Hình ảnh sẽ dính cách mép trên 20px */
+        }
+
+        .questions-box {
+            flex: 1.5;
+        }
+
+        .image-box img {
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 { color: var(--primary-color); border-left: 5px solid var(--primary-color); padding-left: 10px; margin-top: 0; }
+        .note { background: #fff3cd; padding: 10px; border-left: 4px solid #ffc107; margin-bottom: 15px; font-style: italic; font-size: 0.9em; }
+
+        .question-group {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+
+        .item { margin-bottom: 15px; padding: 12px; border-radius: 8px; background: #fff; border: 1px solid #eee; transition: 0.3s; }
+
+        .vocab-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+
+        .drag-item {
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: grab;
+            user-select: none;
+            font-size: 0.9em;
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px solid var(--primary-color);
+            margin: 0 5px;
+            padding: 0 5px;
+            text-align: center;
+            min-height: 25px;
+            vertical-align: bottom;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .drop-zone.hover { background: rgba(19, 166, 46, 0.2); }
+
+        .adaptive-input {
+            border: none;
+            border-bottom: 1px solid #ccc;
+            padding: 2px 5px;
+            font-size: 16px;
+            color: var(--primary-color);
+            font-weight: bold;
+            text-align: center;
+            min-width: 80px;
+            background: transparent;
+        }
+
+        .instruction-highlight { color: var(--highlight-text); font-weight: bold; text-decoration: underline; }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.95em;
+            background: #fdfdfe;
+            border-left: 5px solid var(--primary-color);
+            color: #444;
+            line-height: 1.5;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+
+        .status-icon { font-weight: bold; margin-left: 8px; }
+        .correct-text { color: var(--correct) !important; font-weight: bold; }
+        .wrong-text { color: var(--wrong) !important; font-weight: bold; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            padding-bottom: 50px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-next { background: var(--primary-color); color: white; }
+        .btn-prev { background: #6c757d; color: white; }
+        .btn:hover { opacity: 0.9; transform: scale(1.05); }
+
+        #master-result {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: none;
+            margin: 20px 0;
+            padding: 30px;
+            border: 4px solid var(--primary-color);
+            border-radius: 15px;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>BÀI TẬP IELTS WRITING: PIE CHARTS Master</h1>
+
+    <div class="name-section">
+        <strong>HỌ VÀ TÊN HỌC SINH:</strong>
+        <input type="text" id="studentName" placeholder="Nhập tên của bạn...">
+    </div>
+
+    <div id="master-result"></div>
+
+    <section id="page1" class="page-content active">
+        <div class="section-wrapper">
+            <div class="sticky-chart-box">
+                <div class="image-box">
+                    <img src="https://drive.google.com/thumbnail?id=1TO7Z9Q_oisAPUlXqRZCW4EPzQ6Mu_euE&sz=w1000" alt="Chart 1">
+                </div>
+            </div>
+            <div class="questions-box">
+                <h2>PHẦN 1: Chọn đáp án đúng (Chart 1)</h2>
+                <div class="question-group" data-type="radio">
+                    <p><strong>Xác định ý nghĩa của con số phần trăm trong CHART 1:</strong></p>
+                    <label><input type="radio" name="r1" value="w1"> Tỷ lệ rừng ở 5 quốc gia khác nhau trên thế giới (pie 1) và tỷ lệ các loại gỗ của 5 khu vực này (pie 2)</label><br><br>
+                    <label><input type="radio" name="r1" value="correct"> Tỷ lệ rừng ở 5 khu vực khác nhau trên thế giới (pie 1) và tỷ lệ sản lượng gỗ từ 5 khu vực này (pie 2)</label><br><br>
+                    <label><input type="radio" name="r1" value="w2"> Tỷ lệ rừng ở 5 lãnh thổ khác nhau trên thế giới (pie 1) và tỷ lệ cây lấy gỗ của 5 khu vực này (pie 2)</label>
+                    <div class="feedback" data-exp="Đáp án đúng: Tỷ lệ rừng ở 5 khu vực khác nhau trên thế giới (pie 1) và tỷ lệ sản lượng gỗ từ 5 khu vực này (pie 2)."></div>
+                </div>
+
+                <h2>PHẦN 2: Hoàn thành câu paraphrase cho CHART 1</h2>
+                <div class="question-group" data-type="drag">
+                    <div class="vocab-pool">
+                        <div class="drag-item" draggable="true">forests</div>
+                        <div class="drag-item" draggable="true">forested areas</div>
+                        <div class="drag-item" draggable="true">are located</div>
+                        <div class="drag-item" draggable="true">are situated</div>
+                        <div class="drag-item" draggable="true">percentages</div>
+                        <div class="drag-item" draggable="true">proportions</div>
+                        <div class="drag-item" draggable="true">comes</div>
+                        <div class="drag-item" draggable="true">is produced</div>
+                    </div>
+                    <p>The pie charts compare the percentages of <span class="drop-zone" data-ans="forests,forested areas"></span> that <span class="drop-zone" data-ans="are located,are situated"></span> in five different regions and the <span class="drop-zone" data-ans="percentages,proportions"></span> of timber that <span class="drop-zone" data-ans="comes,is produced"></span> from each region.</p>
+                    <div class="feedback" data-exp="Đáp án gợi ý: (2) forests | forested areas; (3) are located | are situated; (4) percentages | proportions; (5) comes | is produced."></div>
+                </div>
+
+                <h2>PHẦN 3: Xác định lỗi sai thường gặp (Chart 1)</h2>
+                <div class="note">Để ý vào các từ miêu tả đã đúng nội dung chart chưa</div>
+                <div class="question-group" data-type="fill-error">
+                    <div class="sub-q">
+                        <p>1. The pie charts give information about the distribution of forested areas across five regions and the proportions of timber consumption from these regions.</p>
+                        ⇒ Lỗi: <input type="text" class="adaptive-input" data-ans="consumption,timber consumption"> 
+                        → Sửa: <input type="text" class="adaptive-input" data-ans="production,timber production">
+                        <div class="feedback" data-exp="⇒ Lỗi: consumption. (timber consumption là “tiêu thụ gỗ” là sử dụng, trong khi đề bài là sản xuất gỗ). → Sửa: production."></div>
+                    </div>
+                    <div class="sub-q">
+                        <p>2. The pie charts compare the proportions of forest coverage in five distinct areas and the shares of timber produced from these areas.</p>
+                        ⇒ Lỗi: <input type="text" class="adaptive-input" data-ans="forest coverage"> 
+                        → Sửa: <input type="text" class="adaptive-input" data-ans="forests,forested areas,forested land">
+                        <div class="feedback" data-exp="⇒ Lỗi: forest coverage. (forest coverage là độ che phủ rừng. Ví dụ: 100 mét vuông thì đất rừng chiếm 20 mét vuông => độ che phủ rừng là 20%. Vậy không phải đề bài). → Sửa: forests | forested areas | forested land."></div>
+                    </div>
+                    <div class="sub-q">
+                        <p>3. The pie charts give information about the numbers of forest land across five separate areas and the respective contributions of each region to global timber production.</p>
+                        ⇒ Lỗi: <input type="text" class="adaptive-input" data-ans="numbers"> 
+                        → Sửa: <input type="text" class="adaptive-input" data-ans="percentages,proportions,shares,distribution">
+                        <div class="feedback" data-exp="⇒ Lỗi: numbers. (number là cho danh từ đếm được và miêu tả số lượng). → Sửa: percentages | proportions | shares | distribution. (đề bài miêu tả phần trăm)."></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-wrapper" style="border-top: 2px solid #eee; padding-top: 40px;">
+            <div class="sticky-chart-box">
+                <div class="image-box">
+                    <img src="https://drive.google.com/thumbnail?id=1qwvN0SvFHJB0M--012RDO6s10H3MCDO2&sz=w1000" alt="Chart 2">
+                </div>
+            </div>
+            <div class="questions-box">
+                <h2>PHẦN 4: Chọn đáp án đúng (Chart 2)</h2>
+                <div class="note">Để ý miêu tả đã đúng nội dung từng chart chưa</div>
+                <div class="question-group" data-type="radio">
+                    <p><strong>Xác định ý nghĩa của con số phần trăm trong CHART 2:</strong></p>
+                    <label><input type="radio" name="r2" value="w1"> Tỷ lệ lý do di cư từ 1 nước Châu Âu vì các lý do khác nhau (pie 1) và tỷ lệ lý do nhập cư vào nước này vì các lý do khác nhau (pie 2)</label><br><br>
+                    <label><input type="radio" name="r2" value="correct"> Tỷ lệ người nhập cư vào 1 nước Châu Âu bởi các lý do khác nhau (pie 1) và tỷ lệ người di cư từ nước này bởi các lý do khác nhau (pie 2)</label><br><br>
+                    <label><input type="radio" name="r2" value="w2"> Tỷ lệ người nhập cư từ 1 nước Châu Âu vì các lý do khác nhau (pie 1) và tỷ lệ người di cư đến nước này vì các lý do khác nhau (pie 2)</label>
+                    <div class="feedback" data-exp="Đáp án đúng: Tỷ lệ người nhập cư vào 1 nước Châu Âu bởi các lý do khác nhau (pie 1) và tỷ lệ người di cư từ nước này bởi các lý do khác nhau (pie 2)."></div>
+                </div>
+
+                <h2>PHẦN 5: Hoàn thành câu paraphrase cho CHART 2</h2>
+                <div class="question-group" data-type="fill">
+                    The pie charts give information about the 
+                    <input type="text" class="adaptive-input" data-ans="different factors,various factors,driving factors,different reasons,various reasons,driving reasons"> 
+                    that 
+                    <input type="text" class="adaptive-input" data-ans="influenced,led"> 
+                    people to 
+                    <input type="text" class="adaptive-input" data-ans="move to,immigrate to,migrate to,enter,relocate to"> 
+                    and 
+                    <input type="text" class="adaptive-input" data-ans="leave,emigrate from,move away from"> 
+                    a European country in 2009.
+                    <div class="feedback" data-exp="Gợi ý: various factors/reasons; influenced | led; immigrate to; emigrate from."></div>
+                </div>
+
+                <h2>PHẦN 6: Xác định lỗi sai thường gặp (Chart 2)</h2>
+                <div class="note">Các từ vựng trong câu có từ nào NÊN TRÁNH trong Overview và đã được sử dụng chính xác chưa</div>
+                <div class="question-group" data-type="fill-error">
+                    <div class="sub-q">
+                        <p>1. The pie charts give information about the different factors that caused people to migrate to and from a European country in 2009.</p>
+                        ⇒ Lỗi: <input type="text" class="adaptive-input" data-ans="caused"> 
+                        → Sửa: <input type="text" class="adaptive-input" data-ans="influenced,led">
+                        <div class="feedback" data-exp="⇒ Lỗi: caused. (cause sb to do sth hơi tiêu cực, không nên dùng trong Task 1). → Sửa: influenced | led."></div>
+                    </div>
+                    <div class="sub-q">
+                        <p>2. The pie charts compare the percentages of reasons that moved to and left a European country permanently due to five different reasons in 2009.</p>
+                        ⇒ Lỗi: <input type="text" class="adaptive-input" data-ans="reasons"> 
+                        → Sửa: <input type="text" class="adaptive-input" data-ans="people">
+                        <div class="feedback" data-exp="⇒ Lỗi: reasons. (reasons không moved, là người 'people' moved). → Sửa: people."></div>
+                    </div>
+                    <div class="sub-q">
+                        <p>3. The pie charts give information about the various motivations behind people's decisions to immigrate to and emigrate from a European nation in 2009.</p>
+                        ⇒ Lỗi: <input type="text" class="adaptive-input" data-ans="motivations"> 
+                        → Sửa: <input type="text" class="adaptive-input" data-ans="motives,reasons,factors">
+                        <div class="feedback" data-exp="⇒ Lỗi: motivations. (motivation là động lực nhưng không rõ động lực gì hay vì sao rời đi, có bị bắt hay tự muốn, vậy nên chỉ dùng các từ neutral như lí do, yếu tố). → Sửa: motives | reasons | factors."></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn btn-next" onclick="navigate(2)">TIẾP THEO (PHẦN OVERVIEW) →</button>
+        </div>
+    </section>
+
+    <section id="page2" class="page-content">
+        <div class="section-wrapper">
+            <div class="sticky-chart-box">
+                <div class="image-box">
+                    <img src="https://drive.google.com/thumbnail?id=1TO7Z9Q_oisAPUlXqRZCW4EPzQ6Mu_euE&sz=w1000" alt="Chart 1">
+                </div>
+            </div>
+            <div class="questions-box">
+                <h2>PHẦN 1: Chọn đáp án ĐÚNG (Chart 1 - Có 2 đáp án đúng)</h2>
+                <div class="question-group" data-type="checkbox">
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> Africa, North America và Europe là 3 khu vực chiếm tỷ lệ rừng cao nhất.</label>
+                        <div class="feedback" data-exp="Tỷ lệ rừng của Europe mặc dù cao thứ ba, nhưng số liệu của nó thấp hơn khá nhiều so với hai rừng cao nhất (NA và Africa) và cũng chỉ nhỉnh hơn xíu so với hai rừng thấp hơn (SA và Asia). Vậy nên đưa vào chưa đủ hợp lý."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> Europe là nơi duy nhất có tỷ lệ rừng và tỷ lệ sản lượng gỗ gần bằng nhau</label>
+                        <div class="feedback" data-exp="Thông tin này không có gì nổi bật, số liệu của Europe ở 2 charts đều không cao."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> Europe có tỷ lệ rừng bằng với tỷ lệ gỗ của Asia</label>
+                        <div class="feedback" data-exp="Thông tin không nổi bật."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> North America chiếm tỷ lệ gỗ lớn nhất</label>
+                        <div class="feedback" data-exp="Đúng vì North America chiếm tỷ lệ gỗ cao nhất trong tất cả."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> North America, South America và Europe là 3 khu vực chiếm tỷ lệ gỗ cao nhất</label>
+                        <div class="feedback" data-exp="Tỷ lệ gỗ của Europe mặc dù cao thứ ba (20%), nhưng số liệu của nó cũng chỉ nhỉnh hơn xíu so với Asia (18%). Vậy nên chưa đủ nổi bật để đưa vào Overview."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> Africa chiếm tỷ lệ rừng lớn nhất nhưng tỷ lệ gỗ của khu vực này là nhỏ nhất</label>
+                        <div class="feedback" data-exp="Đúng và đây là sự đối lập rừng to nhất >< gỗ ít nhất, nên thêm vào overview hợp lý."></div>
+                    </div>
+                </div>
+
+                <h2>PHẦN 2: Viết câu Overview cơ bản (Chart 1)</h2>
+                <div class="question-group" data-type="drag">
+                    <div class="vocab-pool">
+                        <div class="drag-item" draggable="true">accounts for</div>
+                        <div class="drag-item" draggable="true">forested land</div>
+                        <div class="drag-item" draggable="true">contributes the least</div>
+                        <div class="drag-item" draggable="true">global timber production</div>
+                        <div class="drag-item" draggable="true">the most timber</div>
+                    </div>
+                    <p>"Overall, while Africa <span class="drop-zone" data-ans="accounts for"></span> the highest proportion of <span class="drop-zone" data-ans="forested land"></span>, this region <span class="drop-zone" data-ans="contributes the least"></span> to <span class="drop-zone" data-ans="global timber production"></span>. Meanwhile, <span class="drop-zone" data-ans="the most timber"></span> comes from North America."</p>
+                    <div class="feedback" data-exp="Đáp án chuẩn: (3) accounts for | (4) forested land | (5) contributes the least | (6) global timber production | (7) the most timber."></div>
+                </div>
+
+                <h2>PHẦN 3: Chọn đáp án SAI (Chart 1 - Có 3 đáp án cần chọn)</h2>
+                <div class="question-group" data-type="checkbox">
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> Overall, while Africa has the greatest proportion of forested land, timber production has the least favored industry in this region. Meanwhile, North America produces the most timber in the world.</label>
+                        <div class="feedback" data-exp="SAI vì dùng 'the least favored industry' là thể hiện ý kiến cá nhân."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> Overall, while the greatest proportion of forested land is in Africa, this area records the least timber production. Meanwhile, the largest timber producer is North America.</label>
+                        <div class="feedback" data-exp="Câu này ĐÚNG về mặt học thuật và thông tin. (Không chọn)"></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> Overall, while the greatest proportion of forested land is in Africa, this region prioritizes other industries over timber production. Meanwhile, North America produces the most timber in the world.</label>
+                        <div class="feedback" data-exp="SAI vì dùng 'prioritizes other industries' là thể hiện ý kiến chủ quan."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> Overall, while Africa has the greatest proportion of forested land, timber production accounts for the smallest share of global timber production. Meanwhile, timber production is the most popular industry in North America.</label>
+                        <div class="feedback" data-exp="SAI vì cụm 'most popular industry' là thể hiện ý kiến chủ quan."></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-wrapper" style="border-top: 2px solid #eee; padding-top: 40px;">
+            <div class="sticky-chart-box">
+                <div class="image-box">
+                    <img src="https://drive.google.com/thumbnail?id=1qwvN0SvFHJB0M--012RDO6s10H3MCDO2&sz=w1000" alt="Chart 2">
+                </div>
+            </div>
+            <div class="questions-box">
+                <h2>PHẦN 4: Chọn đáp án NÊN đưa vào Overview (Chart 2 - Có 2 đáp án đúng)</h2>
+                <div class="question-group" data-type="checkbox">
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> Looking for job, studying, và other reasons là 3 lý do ít phổ biến nhất đối với những người nhập cư vào nước này, với số liệu ngang nhau.</label>
+                        <div class="feedback" data-exp="Chỉ nên đề cập đến số liệu lớn nhất. Trường hợp này nhỏ nhất có qúa nhiều dữ liệu => khiến overview quá dài và không highlight lên được đặc điểm nổi bật."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> Family reunion là lý do phổ biến nhất đối với những người nhập cư vào nước này</label>
+                        <div class="feedback" data-exp="Lý do phổ biến nhất (29%), chính xác để đưa vào Overview."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> Family reunion và employment là lý do phổ biến nhất đối với những người nhập cư vào nước này</label>
+                        <div class="feedback" data-exp="Sai vì Family reunion nổi trội hơn hẳn."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> Definite job là lý do phổ biến nhất đối với những người di cư từ nước này</label>
+                        <div class="feedback" data-exp="Đúng, đây là đặc điểm nổi bật nhất của biểu đồ di cư (38%)."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> Studying là lý do ít phổ biến nhất đối với những người nhập cư vào và di cư từ nước này, với số liệu thấp hơn rất nhiều so với các lí do còn lại.</label>
+                        <div class="feedback" data-exp="“studying” xấp xỉ bằng “looking for jobs” và “other reasons”, cũng không quá nổi bật để đưa vào. Ngoài ra, khi nói studying là lí do phổ biến cho cả nhập cư và di cư thì cũng rất khó đưa ra nhận đính chính xác."></div>
+                    </div>
+                </div>
+
+                <h2>PHẦN 5: Viết câu Overview cơ bản (Chart 2)</h2>
+                <div class="question-group" data-type="drag">
+                    <div class="vocab-pool">
+                        <div class="drag-item" draggable="true">common reason</div>
+                        <div class="drag-item" draggable="true">immigrants</div>
+                        <div class="drag-item" draggable="true">family members</div>
+                        <div class="drag-item" draggable="true">employment</div>
+                        <div class="drag-item" draggable="true">reported</div>
+                    </div>
+                    <p>"Overall, the most <span class="drop-zone" data-ans="common reason"></span> for <span class="drop-zone" data-ans="immigrants"></span> going to this country was to accompany their <span class="drop-zone" data-ans="family members"></span> and for <span class="drop-zone" data-ans="employment"></span>, in the case of people leaving, having a job offer was the most popular reason <span class="drop-zone" data-ans="reported"></span>."</p>
+                    <div class="feedback" data-exp="Đáp án chuẩn: (14) common reason | (15) immigrants | (16) family members | (17) employment | (18) reported."></div>
+                </div>
+
+                <h2>PHẦN 6: Chọn đáp án SAI (Chart 2 - Có 3 đáp án cần chọn)</h2>
+                <div class="question-group" data-type="checkbox">
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> Overall, while family reunion was the most preferred reason for people to immigrate to this European nation, emigrants from it chose to leave primarily because they already had definite jobs abroad.</label>
+                        <div class="feedback" data-exp="SAI vì 'preferred' thể hiện ý kiến chủ quan/ cá nhân. Đề bài không có dữ liệu về ưu tiên hoặc thích lí do được chọn."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> Overall, while family reunion was the leading cause for people to immigrate to this European nation, emigrants from it chose to leave primarily because they already had definite jobs abroad.</label>
+                        <div class="feedback" data-exp="Câu này ĐÚNG."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="false"> Overall, while family reunion was the main reason for people that immigrated to this European nation, emigrants from it chose to leave primarily because they already had definite jobs abroad.</label>
+                        <div class="feedback" data-exp="Câu này ĐÚNG."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> Overall, while family reunion was the most favorite reason for people to immigrate to this European nation, emigrants from it chose to leave primarily because they already had definite jobs abroad.</label>
+                        <div class="feedback" data-exp="SAI vì 'most favorite reason' thể hiện ý kiến chủ quan/ cá nhân. Không có dữ liệu cho thấy “mức độ yêu thích của các lí do”."></div>
+                    </div>
+                    <div class="item">
+                        <label><input type="checkbox" data-correct="true"> Overall, while family reunion was the most common reason for people to immigrate to this European nation, emigrants from it chose to leave primarily because they already had their dream jobs abroad.</label>
+                        <div class="feedback" data-exp="SAI vì 'dream jobs' là suy diễn, thể hiện ý kiến chủ quan/ cá nhân. Không có dữ liệu cho thấy “rời đi vì công việc mơ ước”, chỉ nói là công việc."></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn btn-prev" onclick="navigate(1)">← QUAY LẠI</button>
+            <button class="btn btn-next" id="final-submit" onclick="submitAll()">NỘP BÀI (SUBMIT) ✓</button>
+        </div>
+    </section>
+</div>
+
+<script>
+    function navigate(pageNum) {
+        document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + pageNum).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Drag and Drop
+    document.querySelectorAll('.drag-item').forEach(item => {
+        item.addEventListener('dragstart', e => e.dataTransfer.setData('text', item.innerText));
+    });
+
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('hover'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('hover'));
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.classList.remove('hover');
+            zone.innerText = e.dataTransfer.getData('text');
+        });
+    });
+
+    function submitAll() {
+        const name = document.getElementById('studentName').value.trim();
+        if (!name) { alert("Vui lòng nhập tên!"); return; }
+
+        let totalScore = 0;
+        let maxScore = 0;
+        
+        // --- PHẦN MỚI: BIẾN ĐỂ THU THẬP ĐÁP ÁN RÚT GỌN ---
+        let studentAnswers = [];
+
+        document.querySelectorAll('.question-group').forEach((group, index) => {
+            const type = group.dataset.type;
+            const feedbacks = group.querySelectorAll('.feedback');
+            
+            // --- PHẦN MỚI: LOGIC LẤY ĐÁP ÁN HỌC SINH ĐIỀN ---
+            const qNum = index + 1;
+            let currentQRes = "";
+
+            if (type === 'radio') {
+                maxScore += 1; // Mỗi radio group là 1 điểm
+                const selected = group.querySelector('input[type="radio"]:checked');
+                
+                currentQRes = selected ? selected.value : "None"; // Lấy value radio
+
+                if (selected && selected.value === 'correct') {
+                    totalScore++;
+                    selected.parentElement.classList.add('correct-text');
+                    selected.parentElement.innerHTML += " ✔";
+                } else if (selected) {
+                    selected.parentElement.classList.add('wrong-text');
+                    selected.parentElement.innerHTML += " ✘";
+                }
+            } 
+            else if (type === 'drag') {
+                const zones = group.querySelectorAll('.drop-zone');
+                maxScore += zones.length; // Mỗi ô trống 1 điểm
+                
+                let dragVals = [];
+                zones.forEach(zone => {
+                    const val = zone.innerText.trim().toLowerCase();
+                    dragVals.push(val || "_"); // Lấy chữ trong ô kéo thả
+
+                    const answers = zone.dataset.ans.split(',').map(s => s.trim().toLowerCase());
+                    if (answers.includes(val)) {
+                        totalScore++;
+                        zone.style.color = 'var(--correct)';
+                        zone.innerHTML += " ✔";
+                    } else {
+                        zone.style.color = 'var(--wrong)';
+                        zone.innerHTML += " ✘";
+                    }
+                });
+                currentQRes = `[${dragVals.join(",")}]`;
+            }
+            else if (type === 'fill') {
+                const inputs = group.querySelectorAll('input[type="text"]');
+                maxScore += inputs.length; // Mỗi ô input 1 điểm
+                
+                let fillVals = [];
+                inputs.forEach(input => {
+                    const val = input.value.trim().toLowerCase();
+                    fillVals.push(val || "_"); // Lấy chữ học sinh điền
+
+                    const answers = input.dataset.ans.split(',').map(s => s.trim().toLowerCase());
+                    if (val && answers.some(a => val.includes(a))) {
+                        totalScore++;
+                        input.style.color = 'var(--correct)';
+                        input.insertAdjacentHTML('afterend', "<span class='status-icon correct-text'>✔</span>");
+                    } else {
+                        input.style.color = 'var(--wrong)';
+                        input.insertAdjacentHTML('afterend', "<span class='status-icon wrong-text'>✘</span>");
+                    }
+                });
+                currentQRes = `[${fillVals.join(",")}]`;
+            }
+            else if (type === 'fill-error') {
+                // Bài sửa lỗi: Mỗi câu là 1 điểm (phải đúng cả lỗi và sửa)
+                const subQs = group.querySelectorAll('.sub-q');
+                
+                let errVals = [];
+                subQs.forEach(sub => {
+                    maxScore += 1;
+                    const inputs = sub.querySelectorAll('input[type="text"]');
+                    let allCorrect = true;
+                    
+                    let pair = [];
+                    inputs.forEach(input => {
+                        const val = input.value.trim().toLowerCase();
+                        pair.push(val || "_");
+
+                        const answers = input.dataset.ans.split(',').map(s => s.trim().toLowerCase());
+                        if (val && answers.some(a => val.includes(a))) {
+                            input.style.color = 'var(--correct)';
+                            input.insertAdjacentHTML('afterend', "<span class='status-icon correct-text'>✔</span>");
+                        } else {
+                            allCorrect = false;
+                            input.style.color = 'var(--wrong)';
+                            input.insertAdjacentHTML('afterend', "<span class='status-icon wrong-text'>✘</span>");
+                        }
+                    });
+                    if (allCorrect) totalScore++;
+                    errVals.push(`{${pair.join("->")}}`);
+                });
+                currentQRes = errVals.join("|");
+            }
+            else if (type === 'checkbox') {
+                // Bài Checkbox: Mỗi đáp án cần tick (data-correct="true") là 1 điểm
+                let checkVals = [];
+                group.querySelectorAll('.item').forEach((item, i) => {
+                    const cb = item.querySelector('input');
+                    const isTarget = cb.dataset.correct === "true"; 
+                    
+                    if (cb.checked) checkVals.push(i+1); // Lấy số thứ tự đáp án được chọn
+                    if (isTarget) maxScore += 1; // Chỉ tính điểm cho các đáp án cần chọn
+
+                    if (cb.checked && isTarget) {
+                        totalScore++;
+                        item.classList.add('correct-text');
+                        item.insertAdjacentHTML('beforeend', " <span class='status-icon'>✔ (Chính xác)</span>");
+                    } else if (cb.checked && !isTarget) {
+                        // Chọn sai đáp án không cần chọn
+                        item.classList.add('wrong-text');
+                        item.insertAdjacentHTML('beforeend', " <span class='status-icon'>✘ (Không nên chọn)</span>");
+                    } else if (!cb.checked && isTarget) {
+                        // Bỏ lỡ đáp án đúng
+                        item.classList.add('wrong-text');
+                        item.insertAdjacentHTML('beforeend', " <span class='status-icon'>✘ (Bạn đã bỏ lỡ)</span>");
+                    }
+                    cb.disabled = true;
+                });
+                currentQRes = `Check(${checkVals.join(",")})`;
+            }
+
+            // Gộp vào mảng tổng
+            studentAnswers.push(`Q${qNum}:${currentQRes}`);
+
+            // Hiện giải thích (GỐC)
+            feedbacks.forEach(fb => {
+                fb.style.display = 'block';
+                if(fb.dataset.exp) {
+                    fb.innerHTML = `<strong>Giải thích:</strong> ${fb.dataset.exp}`;
+                }
+            });
+        });
+
+        const res = document.getElementById('master-result');
+        res.style.display = 'block';
+        res.innerHTML = `HỌC SINH: ${name.toUpperCase()}<br>TỔNG ĐIỂM: ${totalScore} / ${maxScore}`;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.getElementById('final-submit').disabled = true;
+        document.getElementById('final-submit').style.opacity = '0.5';
+
+        // --- PHẦN MỚI: GỬI DỮ LIỆU LÊN GOOGLE SHEET ---
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzd2AB3Nps9WxnS-NWzsOOhDZW1l_Gce9pSLiEWWn4_x3egOKrHjvBL9JT6OmZb_ngbdA/exec';
+        
+        const payload = {
+            fullName: name,
+            totalScore: `${totalScore}/${maxScore}`,
+            answerString: studentAnswers.join(" | ")
+        };
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(() => alert("Nộp bài thành công!"))
+        .catch(error => console.error('Error!', error.message));
+    }
+</script>
+</body>
+</html>
